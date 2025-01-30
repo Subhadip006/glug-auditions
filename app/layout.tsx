@@ -7,7 +7,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'My E-commerce Store',
+  title: 'glug-auditions',
   description: 'Welcome to my e-commerce store',
 };
 

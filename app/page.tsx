@@ -74,7 +74,7 @@ export default function Home() {
               Welcome to Our Store
             </h1>
             <p className="text-xl text-gray-200 mb-8">
-              Discover our amazing collection of products
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam, cumque.
             </p>
           </div>
         </div>
