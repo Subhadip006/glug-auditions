@@ -26,6 +26,15 @@ const SignUpPage = () => {
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
+     try {
+    const { error } = await supabase.auth.signUp({ email, password })
+    if (error) throw error
+
+    // Force full page reload
+    window.location.href = '/dashboard' // Changed from router.push()
+  } catch (error: any) {
+    setError(error.message)
+  }
     e.preventDefault();
     setError('');
 
@@ -120,7 +129,7 @@ const SignUpPage = () => {
 
             <div className="text-center text-sm text-gray-600">
               Already have an account?{' '}
-              <a href="/auth/login" className="text-blue-600 hover:text-blue-500">
+              <a href="/login" className="text-blue-600 hover:text-blue-500">
                 Sign in
               </a>
             </div>

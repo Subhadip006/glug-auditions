@@ -7,6 +7,7 @@ export interface Product {
     category: string;
     stock: number;
     created_at: string;
+    quantity: number;
   }
 
   export interface CartItem extends Product {

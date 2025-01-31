@@ -13,6 +13,8 @@ const LoginPage = () => {
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
+
+    
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -87,15 +89,9 @@ const LoginPage = () => {
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
 
-            <div className="mt-4 text-center text-sm">
-              <a href="/auth/reset-password" className="text-blue-600 hover:text-blue-500">
-                Forgot your password?
-              </a>
-            </div>
-
             <div className="text-center text-sm text-gray-600">
               Don't have an account?{' '}
-              <a href="/auth/signup" className="text-blue-600 hover:text-blue-500">
+              <a href="/signup" className="text-blue-600 hover:text-blue-500">
                 Sign up
               </a>
             </div>

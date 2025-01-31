@@ -1,8 +1,10 @@
-"use client"
+'use client';
+
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Product } from '@/types';
 import ProductCard from '@/components/productCard';
+import { Search, ArrowRight } from 'lucide-react';
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -32,9 +34,11 @@ export default function Home() {
 
       if (error) throw error;
 
-      setProducts(data || []);
-      // Set first 4 products as featured
-      setFeaturedProducts(data?.slice(0, 4) || []);
+      let filteredData = data || [];
+      
+     
+      setProducts(filteredData);
+      setFeaturedProducts(data?.filter(p => p.stock > 0).slice(0, 4) || []);
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -58,38 +62,37 @@ export default function Home() {
     }
   }
 
-  // Effect to refetch products when category changes
-  useEffect(() => {
-    fetchProducts();
-  }, [selectedCategory]);
-
+  
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
-      <section className="relative h-[60vh] bg-gray-900">
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-900 to-gray-600 opacity-90" />
+      <section className="relative h-[70vh] bg-gradient-to-r from-blue-900 to-blue-600">
+        <div className="absolute inset-0 bg-black opacity-50" />
         <div className="relative h-full flex items-center justify-center text-center px-4">
-          <div className="max-w-3xl">
+          <div className="max-w-4xl">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              Welcome to Our Store
+              Discover Amazing Products
             </h1>
             <p className="text-xl text-gray-200 mb-8">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam, cumque.
+              Find the perfect items for your needs with our curated collection
             </p>
+            <div className="flex items-center justify-center max-w-md mx-auto">
+              
+            </div>
           </div>
         </div>
       </section>
 
-      
-      <section className="py-8 px-4">
+      {/* Categories Section */}
+      <section className="py-12 px-4">
         <div className="container mx-auto">
           <div className="flex flex-wrap gap-4 justify-center mb-8">
             <button
               onClick={() => setSelectedCategory('all')}
-              className={`px-4 py-2 rounded-full ${
+              className={`px-6 py-2 rounded-full transition-all duration-200 ${
                 selectedCategory === 'all'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 text-gray-800'
+                  ? 'bg-blue-600 text-white shadow-lg'
+                  : 'bg-white text-gray-800 border border-gray-200 hover:bg-gray-50'
               }`}
             >
               All Products
@@ -98,10 +101,10 @@ export default function Home() {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-full ${
+                className={`px-6 py-2 rounded-full transition-all duration-200 ${
                   selectedCategory === category
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 text-gray-800'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'bg-white text-gray-800 border border-gray-200 hover:bg-gray-50'
                 }`}
               >
                 {category}
@@ -111,15 +114,42 @@ export default function Home() {
         </div>
       </section>
 
-      
-      <section className="py-8 px-4">
+      {/* Featured Products Section */}
+      {featuredProducts.length > 0 && (
+        <section className="py-16 px-4">
+          <div className="container mx-auto">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-3xl font-bold">Featured Products</h2>
+              <button className="flex items-center text-blue-600 hover:text-blue-800">
+                View all <ArrowRight className="w-4 h-4 ml-2" />
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                   {featuredProducts.map((product) => (
+                      <ProductCard 
+                        key={product.id} 
+                        product={product}
+                      />
+  ))}
+</div>
+          </div>
+        </section>
+      )}
+
+      {/* All Products Section */}
+      <section className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold mb-8">
             {selectedCategory === 'all' ? 'All Products' : selectedCategory}
           </h2>
           {loading ? (
             <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900" />
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
+            </div>
+          ) : products.length === 0 ? (
+            <div className="text-center py-16">
+              <h3 className="text-xl text-gray-600">No products found</h3>
+              <p className="text-gray-500 mt-2">Try adjusting your search or filters</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -130,20 +160,6 @@ export default function Home() {
           )}
         </div>
       </section>
-
-      {/* Featured Products */}
-      {featuredProducts.length > 0 && (
-        <section className="py-16 px-4 bg-gray-50 text-zinc-900">
-          <div className="container mx-auto">
-            <h2 className="text-3xl font-bold mb-8">Featured Products</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {featuredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
     </main>
   );
 }
